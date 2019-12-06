@@ -11,7 +11,7 @@ class ArticleController extends Controller
     public function index()
     {
         return view('articles.index', [
-            'articles' => Article::all()
+            'articles' => Article::latest()->get()
         ]);
     }
 
@@ -21,45 +21,42 @@ class ArticleController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store()
     {
-        $validatedData = $request->validate([
+        Article::create(request()->validate([
             'title' => 'required|min:3|max:255',
             'excerpt' => 'required',
             'body' => 'required',
-        ]);
-        Article::create($validatedData);
+        ]));
 
-        return view('articles.index');
+        return redirect('/articles');
     }
 
-    public function show($id)
+    public function show(Article $article)
     {
-        return view('articles.show', [
-            'article' => Article::find($id)
-        ]);
+        return view('articles.show', ['article' => $article]);
     }
 
-    public function edit($id)
+    public function edit(Article $article)
     {
-        //
+        return view('articles.edit', ['article' => $article]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Article $article)
     {
-        $validatedData = $request->validate([
+        $article->update(request()->validate([
             'title' => 'required|min:3|max:255',
             'excerpt' => 'required',
             'body' => 'required',
-        ]);
-        Article::update($validatedData);
+        ]));
 
-        return view('articles.show', $id);
+        return redirect('/articles/' . $article->id);
     }
 
-    public function destroy($id)
+    public function destroy(Article $article)
     {
-        //
+        $article->delete();
+        return redirect('/articles');
     }
 
 }
