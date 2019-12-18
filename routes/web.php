@@ -19,16 +19,5 @@ Route::get('/about', function () {
         'articles' => App\Article::take(3)->latest()->get()
     ]);
 });
-Route::get('/articles', function () {
-    return view('articles.index', [
-        'articles' => App\Article::latest()->get()
-    ]);
-});
 
-Route::get('/articles', 'ArticleController@index');
-Route::get('/articles/create', 'ArticleController@create');
-Route::post('/articles', 'ArticleController@store');
-Route::get('/articles/{article}', 'ArticleController@show');
-Route::get('/articles/{article}/edit', 'ArticleController@edit');
-Route::put('/articles/{article}', 'ArticleController@update');
-Route::delete('/articles/{article}', 'ArticleController@delete');
+Route::resource('/articles', 'ArticleController');

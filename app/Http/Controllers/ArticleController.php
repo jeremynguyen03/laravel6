@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Article;
+use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 
@@ -10,9 +11,13 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        return view('articles.index', [
-            'articles' => Article::latest()->get()
-        ]);
+        if (request('tag')) {
+            $articles = Tag::where('name', request('tag'))->firstOrFail()->articles();
+        } else {
+            $articles = Article::latest()->get();
+        }
+
+        return view('articles.index', ['articles' => $articles]);
     }
 
     public function create()
@@ -29,7 +34,7 @@ class ArticleController extends Controller
             'body' => 'required',
         ]));
 
-        return redirect('/articles');
+        return redirect(route('articles.index'));
     }
 
     public function show(Article $article)
@@ -50,13 +55,13 @@ class ArticleController extends Controller
             'body' => 'required',
         ]));
 
-        return redirect('/articles/' . $article->id);
+        return redirect(route('articles.show', $article->id));
     }
 
     public function destroy(Article $article)
     {
         $article->delete();
-        return redirect('/articles');
+        return redirect(route('articles.index'));
     }
 
 }

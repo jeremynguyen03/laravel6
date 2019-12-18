@@ -5,7 +5,7 @@
 @section('content')
     <div id="wrapper">
         <div id="page" class="container">
-            <form method="POST" action="/articles">
+            <form method="POST" action="{{ route('articles.store') }}">
                 @csrf
                 <h1 class="heading has-text-weight-bold is-size-4">New Article</h1>
                 <div class="field">
